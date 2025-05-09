@@ -1,0 +1,43 @@
+<div class="mx-5">
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <button class="btn btn-outline-primary" (click)="subMonth()">← Mois précédent</button>
+      <h3 class="text-capitalize">{{ viewDate | date: 'MMMM yyyy' : undefined : locale.code }}</h3>
+      <button class="btn btn-outline-primary" (click)="addMonth()">Mois suivant →</button>
+  </div>
+  
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [locale]="locale.code" (dayClicked)="toggleDisponibilite($event.day.date)" [activeDayIsOpen]="false" [refresh]="refresh">
+        <ng-template mwlCalendarMonthCell let-day="day" let-locale="locale" let-dayClicked="dayClicked">          
+            <div class="rounded p-2 text-center border" [class.bg-success]="isDateDisponible(day.date)" [class.bg-light]="!isDateDisponible(day.date)" [class.text-white]="isDateDisponible(day.date)"
+                [class.text-muted]="!day.inMonth" [class.border-primary]="day.isToday" style="cursor: pointer;" (click)="dayClicked({ day: day })">
+                <strong>{{ day.date | date:'d' }}</strong>
+            </div>
+          </ng-template>
+        </mwl-calendar-month-view>
+      </div>
+    </div>
+  </div>
+    <hr class="my-4">
+  <div class="mt-5 mx-5">
+    <h4 class="mb-3">
+      <i class="bi bi-calendar-check-fill me-2 text-success"></i> Je suis dispo les :
+    </h4>
+    <ul class="list-group shadow-sm">
+      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let date of disponibilites">
+        <span>
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+            {{ date | date: 'fullDate' : undefined : locale.code }}
+        </span>
+        <button class="btn btn-sm btn-outline-danger" (click)="toggleDisponibilite(date)">
+          <i class="bi bi-trash-fill"></i> Supprimer
+        </button>
+      </li>
+      <li class="list-group-item text-muted" *ngIf="disponibilites.length === 0">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        Aucune disponibilité sélectionnée pour le moment.
+      </li>
+    </ul>
+  </div>
+</div>
