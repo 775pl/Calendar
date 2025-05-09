@@ -1,0 +1,7 @@
+<div class="container mt-4">
+    <h2>Créer un compte</h2>
+    <input [(ngModel)]="name" class="form-control mb-2" placeholder="Prénom" />
+    <input [(ngModel)]="email" class="form-control mb-2" placeholder="Email" type="email" />
+    <input [(ngModel)]="password" class="form-control mb-2" placeholder="Mot de passe" type="password" />
+    <button class="btn btn-primary" (click)="register()">S'inscrire</button>
+</div>

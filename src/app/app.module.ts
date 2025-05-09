@@ -15,20 +15,34 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID } from '@angular/core';   
 
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
+import { firebaseConfig } from '../environments/environment';
+import { RegisterComponent } from './components/auth/register/register.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { AuthGuard } from './guards/auth.guard';
 
-// Routes directement ici
 const routes: Routes = [
-  { path: '', component: CalendarComponent }
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] }
 ];
+
 registerLocaleData(localeFr);
 @NgModule({
-  declarations: [
-    AppComponent,
-    CalendarComponent,
-    UserFormComponent
-  ],
-  imports: [
+    declarations: [
+        AppComponent,
+        CalendarComponent,
+        UserFormComponent,
+        LoginComponent
+    ],
+    imports: [
+    AngularFireModule.initializeApp(firebaseConfig.firebase),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
@@ -36,11 +50,12 @@ registerLocaleData(localeFr);
     CalendarModule.forRoot({
         provide: DateAdapter,
         useFactory: adapterFactory,
-      }),
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'fr-FR' }
-  ],
-  bootstrap: [AppComponent]
+    }),
+    ],
+    providers: [
+        { provide: LOCALE_ID, useValue: 'fr-FR' },
+        AuthGuard
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}
